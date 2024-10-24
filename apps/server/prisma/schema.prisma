@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Account {
+  vid          BigInt   @id
+  cookie       String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  accessToken  String?
+  refreshToken String?
+}
+
+model MpBook {
+  bookId    String    @id
+  title     String    @unique
+  cover     String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  disabled Boolean @default(false)
+  articles  Article[]
+  keywords  KeyWord[]
+}
+
+model Article {
+  id          Int       @id @default(autoincrement())
+  title       String
+  reviewId    String    @unique
+  pic         String
+  author      String?
+  publishAt   DateTime?
+  contentText String?
+  contentPage String?
+  url         String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  mpBookId    String
+  summary     String?
+  mpBook      MpBook    @relation(fields: [mpBookId], references: [bookId])
+  keywords    KeyWord[]
+}
+
+model KeyWord {
+  id        Int     @id @default(autoincrement())
+  text      String
+  articleId Int
+  bookId    String
+  book      MpBook  @relation(fields: [bookId], references: [bookId])
+  article   Article @relation(fields: [articleId], references: [id])
+}
