@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/drawer";
 import { useStore } from "@/store";
 
-const countdown = 40 * 1000; // 40s
+const timeout = 40 * 1000; // 40s
 
 async function fetchQrCode(): Promise<{ url: string; uid: string }> {
   const { data } = await axios.get("/api/weread/loginQrCode");
@@ -30,7 +30,7 @@ async function fetchQrCode(): Promise<{ url: string; uid: string }> {
 
 async function getLoginInfo(uid: string) {
   const { data } = await axios.get(`/api/weread/loginInfo?uid=${uid}`, {
-    timeout: countdown,
+    timeout,
   });
   return data;
 }
@@ -62,7 +62,7 @@ export function LoginQrCode() {
   }, [uid]);
 
   function generateQrCode() {
-    setTargetDate(Date.now() + countdown);
+    setTargetDate(Date.now() + timeout);
     fetchQrCode().then((data) => {
       setQrCodeUrl(data.url);
       setUid(data.uid);
